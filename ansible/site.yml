@@ -4,8 +4,10 @@
   become_method: sudo
   tasks:
 
-  - name: Set right origin for packages
-    command: pkg set -o devel/pkg-config:devel/pkgconf
+  - name: Replace origin of devel/pkg-config with devel/pkgconfig
+    script: roles/common/files/set_pkg_config_origin.sh
+    args:
+      creates: /etc/pkg/updated_pkg_config_origin
 
   - name: Install essential dependencies
     pkgng:
