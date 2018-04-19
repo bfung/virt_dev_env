@@ -1,0 +1,43 @@
+---
+- hosts: all
+  become: yes
+  become_method: sudo
+  tasks:
+
+  - name: Set right origin for packages
+    command: pkg set -o devel/pkg-config:devel/pkgconf
+
+  - name: Install essential dependencies
+    pkgng:
+      name: "{{item}}"
+      state: present
+    with_items:
+    - postgresql96-server-9.6.8_1
+    - git
+    - blas
+    - lapack
+    - gsl
+    - wget
+    - devel/pkgconf
+    # haskell stack dependencies
+    - devel/gmake
+    - perl5
+    - lang/gcc
+    - misc/compat8x
+    - misc/compat9x
+    - converters/libiconv
+    - ca_root_nss
+
+#pkg install -y git blas lapack gsl wget
+
+## Get the right version of pk-config for hmatrix used in derpwatch.
+#pkg set -o devel/pkg-config:devel/pkgconf
+#pkg install -y devel/pkgconf
+
+## Install haskell stack
+#pkg install -y devel/gmake perl5 lang/gcc misc/compat8x misc/compat9x converters/libiconv ca_root_nss
+#wget https://www.stackage.org/stack/freebsd-x86_64 -O stack-1.6.5-freebsd-x86_64.tar.gz
+    
+## fix gcc
+#mv /lib/libgcc_s.so.1 /lib/libgcc_s.so.1.bad
+#ln -s /usr/local/lib/gcc6/libgcc_s.so.1 /lib/libgcc_s.so.1
