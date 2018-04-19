@@ -14,12 +14,12 @@
       name: "{{item}}"
       state: present
     with_items:
+    - curl
     - postgresql96-server-9.6.8_1
     - git
     - blas
     - lapack
     - gsl
-    - wget
     - devel/pkgconf
     # haskell stack dependencies
     - devel/gmake
@@ -29,6 +29,11 @@
     - misc/compat9x
     - converters/libiconv
     - ca_root_nss
+
+  - name: Download haskell stack
+    get_url:
+      url: https://www.stackage.org/stack/freebsd-x86_64
+      dest: /var/tmp/stack-1.6.5-freebsd-x86_64.tar.gz
 
 #pkg install -y git blas lapack gsl wget
 
