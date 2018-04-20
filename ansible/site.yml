@@ -45,7 +45,7 @@
   - name: Extract haskell stack 
     unarchive:
       src: /var/tmp/stack-1.6.5-freebsd-x86_64.tar.gz
-      dest: /var/tmp/stack-1.6.5-freebsd-x86_64
+      dest: /var/tmp/
 
   - name: Copy stack to /usr/local/bin
     copy:
@@ -87,6 +87,10 @@
       group: vagrant
       mode: u=rw,g-rwx,o-rwx
 
+  - name: create home aws dir
+    file:
+      path: /home/vagrant/.aws
+      state: directory
   - name: Copy aws config file
     copy:
       src: roles/common/files/config
