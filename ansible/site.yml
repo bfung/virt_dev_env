@@ -5,9 +5,13 @@
   tasks:
 
   - name: Replace origin of devel/pkg-config with devel/pkgconfig
-    script: roles/common/files/set_pkg_config_origin.sh
+    command: pkg set -o devel/pkg-config:devel/pkgconfig
     args:
       creates: /etc/pkg/updated_pkg_config_origin
+  - name: Mark that pkg-config was updated
+    copy:
+      content: '# Created by anisble run'
+      dest: /etc/pkg/updated_pkg_config_origin
 
   - name: Install essential dependencies
     pkgng:
@@ -16,6 +20,7 @@
     with_items:
     - curl
     - postgresql96-server-9.6.8_1
+    # git is for development purposes only
     - git
     - blas
     - lapack
@@ -54,7 +59,39 @@
       dest: /usr/local/bin/stack
       state: link
       mode: u=rwx,g=rx,o=rx
-    
-## fix gcc
+
+## fix gcc for ghc-8.0.2
 #mv /lib/libgcc_s.so.1 /lib/libgcc_s.so.1.bad
 #ln -s /usr/local/lib/gcc6/libgcc_s.so.1 /lib/libgcc_s.so.1
+  - name: Stat lib/libgcc_s.so.1.bad
+    stat:
+      path: /lib/libgcc_s.so.1.bad
+    register: libgcc_bad
+  - name: Backup /lib/libgcc_s.so.1
+    copy:
+      src: /lib/libgcc_s.so.1
+      dest: /lib/libgcc_s.so.1.bad
+    when: not libgcc_bad.stat.exists
+  - name: Link the libgcc working with ghc
+    file:
+      src: /usr/local/lib/gcc6/libgcc_s.so.1
+      dest: /lib/libgcc_s.so.1
+      state: link
+      force: yes
+
+  - name: Copy id_rsa for using github
+    copy:
+      src: roles/common/files/id_rsa
+      dest: /home/vagrant/.ssh/id_rsa
+      owner: vagrant
+      group: vagrant
+      mode: u=rw,g-rwx,o-rwx
+
+  - name: Copy aws config file
+    copy:
+      src: roles/common/files/config
+      dest: /home/vagrant/.aws/config
+  - name: Copy aws credentials file
+    copy:
+      src: roles/common/files/credentials
+      dest: /home/vagrant/.aws/credentials

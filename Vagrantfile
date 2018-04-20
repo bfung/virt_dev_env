@@ -18,6 +18,7 @@ Vagrant.configure(CONFIG_VERSION) do |config|
   config.vm.box = "freebsd/FreeBSD-11.1-RELEASE"
 
   config.vm.guest = :freebsd
+  config.vm.hostname = 'devserver0.local'
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.

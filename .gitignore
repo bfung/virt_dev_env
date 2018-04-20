@@ -1,1 +1,4 @@
 .vagrant
+ansible/roles/common/files/id_rsa
+ansible/roles/common/files/config
+ansible/roles/common/files/credentials
