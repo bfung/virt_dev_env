@@ -21,6 +21,8 @@
     - lapack
     - gsl
     - devel/pkgconf
+    # needed for unarchive command, boo
+    - gtar
     # haskell stack dependencies
     - devel/gmake
     - perl5
@@ -35,15 +37,23 @@
       url: https://www.stackage.org/stack/freebsd-x86_64
       dest: /var/tmp/stack-1.6.5-freebsd-x86_64.tar.gz
 
-#pkg install -y git blas lapack gsl wget
+  - name: Extract haskell stack 
+    unarchive:
+      src: /var/tmp/stack-1.6.5-freebsd-x86_64.tar.gz
+      dest: /var/tmp/stack-1.6.5-freebsd-x86_64
 
-## Get the right version of pk-config for hmatrix used in derpwatch.
-#pkg set -o devel/pkg-config:devel/pkgconf
-#pkg install -y devel/pkgconf
+  - name: Copy stack to /usr/local/bin
+    copy:
+      src: /var/tmp/stack-1.6.5-freebsd-x86_64/stack
+      dest: /usr/local/bin/stack-1.6.5-freebsd-x86_64
+      mode: u=rx,g=rx,o=rx
 
-## Install haskell stack
-#pkg install -y devel/gmake perl5 lang/gcc misc/compat8x misc/compat9x converters/libiconv ca_root_nss
-#wget https://www.stackage.org/stack/freebsd-x86_64 -O stack-1.6.5-freebsd-x86_64.tar.gz
+  - name: Symlink stack-1.6.5 to stack
+    file:
+      src: /usr/local/bin/stack-1.6.5-freebsd-x86_64
+      dest: /usr/local/bin/stack
+      state: link
+      mode: u=rwx,g=rx,o=rx
     
 ## fix gcc
 #mv /lib/libgcc_s.so.1 /lib/libgcc_s.so.1.bad
