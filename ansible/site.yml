@@ -39,7 +39,7 @@
 
   - name: Download haskell stack
     get_url:
-      url: https://www.stackage.org/stack/freebsd-x86_64
+      url: https://github.com/commercialhaskell/stack/releases/download/v1.6.5/stack-1.6.5-freebsd-x86_64.tar.gz
       dest: /var/tmp/stack-1.6.5-freebsd-x86_64.tar.gz
 
   - name: Extract haskell stack 
@@ -60,24 +60,20 @@
       state: link
       mode: u=rwx,g=rx,o=rx
 
-## fix gcc for ghc-8.0.2
-#mv /lib/libgcc_s.so.1 /lib/libgcc_s.so.1.bad
-#ln -s /usr/local/lib/gcc6/libgcc_s.so.1 /lib/libgcc_s.so.1
-  - name: Stat lib/libgcc_s.so.1.bad
-    stat:
-      path: /lib/libgcc_s.so.1.bad
-    register: libgcc_bad
-  - name: Backup /lib/libgcc_s.so.1
-    copy:
-      src: /lib/libgcc_s.so.1
-      dest: /lib/libgcc_s.so.1.bad
-    when: not libgcc_bad.stat.exists
-  - name: Link the libgcc working with ghc
+  - name: Create /usr/local/etc/libmap.d directory
     file:
-      src: /usr/local/lib/gcc6/libgcc_s.so.1
-      dest: /lib/libgcc_s.so.1
-      state: link
-      force: yes
+      path: /usr/local/etc/libmap.d
+      state: directory
+  - name: libmap configuration for libgcc6
+    copy:
+      src: roles/common/files/libgcc6.conf
+      dest: /usr/local/etc/libmap.d/libgcc6.conf
+
+  - name: Set vagrant user shell to sh
+    user:
+      name: vagrant
+      shell: /bin/sh
+      groups: vagrant
 
   - name: Copy id_rsa for using github
     copy:
@@ -99,3 +95,12 @@
     copy:
       src: roles/common/files/credentials
       dest: /home/vagrant/.aws/credentials
+
+  - name: create /home/vagrant/.local/bin for yesod devel
+    file:
+      path: /home/vagrant/.local/bin
+      state: directory
+  - name: Add /home/vagrant/.local/bin to PATH env
+    lineinfile:
+      dest: /home/vagrant/.profile
+      line: "PATH=$PATH:/home/vagrant/.local/bin; export PATH"
