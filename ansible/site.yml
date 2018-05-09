@@ -36,6 +36,8 @@
     - misc/compat9x
     - converters/libiconv
     - ca_root_nss
+    # Development tools
+    - neovim
 
   - name: Download haskell stack
     get_url:
