@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant.require_version ">= 2.0.0", "< 2.1.0"
+Vagrant.require_version ">= 2", "< 3"
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
@@ -61,7 +61,7 @@ Vagrant.configure(CONFIG_VERSION) do |config|
     vb.gui = true
 
     # Customize the amount of memory on the VM:
-    vb.memory = "4096"
+    vb.memory = "8192"
     vb.customize ["modifyvm", :id, "--memory", "8192"]
     vb.customize ["modifyvm", :id, "--cpus", "4"]
     vb.customize ["modifyvm", :id, "--hwvirtex", "on"]
