@@ -102,7 +102,11 @@
     file:
       path: /home/vagrant/.local/bin
       state: directory
-  - name: Add /home/vagrant/.local/bin to PATH env
-    lineinfile:
-      dest: /home/vagrant/.profile
-      line: "PATH=$PATH:/home/vagrant/.local/bin; export PATH"
+
+  - name: Set environment variables for development
+    blockinfile:
+      path: /home/vagrant/.profile
+      block: |
+         PATH=$PATH:/home/vagrant/.local/bin; export PATH
+         PGHOST=10.0.2.2; export PGHOST
+         DERPWATCH_MODE=readonly; export DERPWATCH_MODE
