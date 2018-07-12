@@ -38,6 +38,7 @@
     - ca_root_nss
     # Development tools
     - neovim
+    - hs-hlint
 
   - name: Download haskell stack
     get_url:
@@ -107,6 +108,7 @@
     blockinfile:
       path: /home/vagrant/.profile
       block: |
+         PS1="[$USER@\h \W]$ "; export PS1
          PATH=$PATH:/home/vagrant/.local/bin; export PATH
          PGHOST=10.0.2.2; export PGHOST
          DERPWATCH_MODE=readonly; export DERPWATCH_MODE
